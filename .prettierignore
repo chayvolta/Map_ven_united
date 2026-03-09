@@ -1,0 +1,41 @@
+# Ignorar archivos generados y dependencias
+node_modules
+dist
+build
+coverage
+
+# Ignorar archivos de configuración que no deben formatearse
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignorar archivos de sistema
+.DS_Store
+.env
+.env.local
+.env.production
+
+# Ignorar archivos de Azure
+*.PublishSettings
+*.pubxml
+*.azurePubxml
+
+# Ignorar archivos de log
+*.log
+logs
+
+# Ignorar assets binarios
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# Ignorar archivos de documentación markdown (opcional)
+# README.md
+# CHANGELOG.md
