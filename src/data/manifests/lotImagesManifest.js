@@ -6,10 +6,36 @@
 export const DESARROLLO_FOLDER_MAP = {
   Huatulco: 'Huatulco',
   Ixtapa: 'Ixtapa',
+  'Ixtapa-Zihuatanejo': 'Ixtapa',
   Loreto: 'Loreto',
+  'Loreto - Nopoló': 'Nopolo',
+  'Loreto - Nopolo': 'Nopolo',
   Nopoló: 'Nopolo',
   Nopolo: 'Nopolo',
 };
+
+const CDN_BASE_URL =
+  'https://cdn-fonatur-bddmcafqc9csawfh.a01.azurefd.net/portafolio/Travel_LA/public';
+
+const DESARROLLO_ALIASES = {
+  'ixtapa-zihuatanejo': 'Ixtapa',
+  'loreto - nopolo': 'Nopolo',
+};
+
+function resolveDesarrolloFolder(desarrollo) {
+  if (!desarrollo) return null;
+
+  const directMatch = DESARROLLO_FOLDER_MAP[desarrollo];
+  if (directMatch) return directMatch;
+
+  const normalizedDesarrollo = desarrollo
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
+  return DESARROLLO_ALIASES[normalizedDesarrollo] || null;
+}
 
 // Image manifest for all lots - clave (normalized) -> array of image filenames
 // Includes photos only (files starting with "1."), excluding KMZ and PL (plan) images
@@ -361,7 +387,7 @@ export function getLotImages(lot) {
   const normalizedClave = clave.replace(/Ø/g, '_');
 
   // Get the folder name for the desarrollo
-  const folderName = DESARROLLO_FOLDER_MAP[desarrollo];
+  const folderName = resolveDesarrolloFolder(desarrollo);
   if (!folderName) return [];
 
   // Get the images for the lot from manifest
@@ -373,9 +399,7 @@ export function getLotImages(lot) {
   return imageFiles.map(fileName => {
     // Use encodeURI for the full path - it's less aggressive than encodeURIComponent
     // and better handles accented characters that Vite serves correctly
-    const cdnBase =
-      'https://cdn-fonatur-bddmcafqc9csawfh.a01.azurefd.net/portafolio/Travel_LA/public';
-    const path = `${cdnBase}/${folderName}/${normalizedClave}/${fileName}`;
+    const path = `${CDN_BASE_URL}/${folderName}/${normalizedClave}/${fileName}`;
     return encodeURI(path);
   });
 }
